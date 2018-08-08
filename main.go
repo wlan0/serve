@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/rs/cors"
 )
 
 var Port int
@@ -40,7 +42,7 @@ func (h *Handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 func main() {
 	flag.Parse()
 	handler := &Handler{http.FileServer(http.Dir(Dir))}
-	http.Handle("/", handler)
+	http.Handle("/", cors.AllowAll().Handler(handler))
 	addr := fmt.Sprintf(":%d", Port)
 	log.Printf("Listening on %s\n", addr)
 	log.Fatal(http.ListenAndServe(addr, nil))
